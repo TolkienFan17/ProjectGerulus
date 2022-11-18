@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureMessenger.Console", "SecureMessenger.Console\SecureMessenger.Console.csproj", "{16CEBD45-0446-4F0A-B8DE-00D52330E7C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureMessenger.Terminal", "SecureMessenger.Terminal\SecureMessenger.Terminal.csproj", "{16CEBD45-0446-4F0A-B8DE-00D52330E7C7}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
