@@ -3,7 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SecureMessenger.Terminal", "SecureMessenger.Terminal\SecureMessenger.Terminal.csproj", "{16CEBD45-0446-4F0A-B8DE-00D52330E7C7}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gerulus.Standalone", "Gerulus.Standalone\Gerulus.Standalone.csproj", "{16CEBD45-0446-4F0A-B8DE-00D52330E7C7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Gerulus.Core", "Gerulus.Core\Gerulus.Core.csproj", "{DF0B089C-90BD-49BC-88CD-BBFE9A6523D6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -18,5 +20,9 @@ Global
 		{16CEBD45-0446-4F0A-B8DE-00D52330E7C7}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{16CEBD45-0446-4F0A-B8DE-00D52330E7C7}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{16CEBD45-0446-4F0A-B8DE-00D52330E7C7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DF0B089C-90BD-49BC-88CD-BBFE9A6523D6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DF0B089C-90BD-49BC-88CD-BBFE9A6523D6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DF0B089C-90BD-49BC-88CD-BBFE9A6523D6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DF0B089C-90BD-49BC-88CD-BBFE9A6523D6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal
