@@ -1,4 +1,3 @@
-using System.Data;
 using System.Security.Cryptography;
 using System.Text;
 using Gerulus.Core;
@@ -9,27 +8,6 @@ namespace SecureMessenger.Services;
 
 public class AuthenticationService : IAuthenticationService
 {
-    public async Task<bool> AuthenticateAsync(string username, string password)
-    {
-        using var conn = new SqliteConnection("Data Source=Gerulus.db");
-        await conn.OpenAsync();
-
-        using var command = new SqliteCommand($"SELECT PASSWORD, SALT FROM USERS WHERE USERNAME = '{username}';", conn);
-        /*using var command = new SqliteCommand("SELECT PASSWORD, SALT FROM USERS WHERE USERNAME = @user;", conn);
-
-        command.Parameters.AddWithValue("user", username);
-        await command.PrepareAsync();*/
-
-        using var passwordReader = await command.ExecuteReaderAsync();
-        if (!passwordReader.HasRows)
-            return false;
-
-        byte[] salt = (byte[])passwordReader["SALT"];
-        byte[] hash = await ComputeHashAsync(Encoding.UTF8.GetBytes(password), salt);
-
-        return hash.Equals((byte[])passwordReader["PASSWORD"]);
-
-    }
 
     public async Task CreateAccountAsync(string username, string password)
     {
@@ -45,6 +23,29 @@ public class AuthenticationService : IAuthenticationService
         using var context = new GerulusContext();
         context.Users.Add(user);
         await context.SaveChangesAsync();
+    }
+
+    public async Task<bool> AuthenticateAsync(string username, string password)
+    {
+        using var conn = new SqliteConnection("Data Source=Gerulus.db");
+        await conn.OpenAsync();
+
+        using var command = new SqliteCommand($"SELECT PASSWORD, SALT FROM USERS WHERE USERNAME = '{username}';", conn);
+        /*using var command = new SqliteCommand("SELECT PASSWORD, SALT FROM USERS WHERE USERNAME = @user;", conn);
+
+        command.Parameters.AddWithValue("user", username);
+        await command.PrepareAsync();*/
+
+        using var passwordReader = await command.ExecuteReaderAsync();
+        if (!passwordReader.HasRows)
+            return false;
+
+        await passwordReader.ReadAsync();
+
+        byte[] salt = (byte[])passwordReader["Salt"];
+        byte[] hash = await ComputeHashAsync(Encoding.UTF8.GetBytes(password), salt);
+
+        return hash.SequenceEqual((byte[])passwordReader["Password"]);
     }
 
     private static Task<byte[]> ComputeHashAsync(byte[] password, byte[] salt)
