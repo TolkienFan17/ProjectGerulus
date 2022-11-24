@@ -412,3 +412,5 @@ Desktop.ini
 .DS_Store
 
 *.db
+*.db-shm
+*.db-wal
