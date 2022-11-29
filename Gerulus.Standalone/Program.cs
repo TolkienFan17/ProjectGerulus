@@ -1,13 +1,8 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.Data;
-using System.Reflection.Metadata;
-using Gerulus.Core;
-using Microsoft.Data.Sqlite;
-using SecureMessenger.Services;
+﻿using System.ComponentModel.DataAnnotations;
+using Gerulus.Core.Services;
 using Sharprompt;
 
-namespace SecureMessenger.Terminal;
+namespace Gerulus.Standalone;
 
 public class Program
 {
