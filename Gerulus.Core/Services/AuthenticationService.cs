@@ -4,7 +4,7 @@ using Gerulus.Core;
 using Konscious.Security.Cryptography;
 using Microsoft.Data.Sqlite;
 
-namespace SecureMessenger.Services;
+namespace Gerulus.Core.Services;
 
 public class AuthenticationService : IAuthenticationService
 {

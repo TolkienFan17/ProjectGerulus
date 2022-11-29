@@ -1,4 +1,4 @@
-namespace Gerulus.Core;
+namespace Gerulus.Core.Services;
 
 public interface IAuthenticationService
 {
