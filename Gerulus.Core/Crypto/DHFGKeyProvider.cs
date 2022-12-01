@@ -5,7 +5,7 @@ using Org.BouncyCastle.Security;
 
 namespace Gerulus.Core.Crypto;
 
-public class DHFGKeyProvider : ICryptoKeyProvider, ICryptoParameterProvider<DHFGParameters>
+public class DHFGKeyProvider : ICryptoKeyService<DHFGParameters>
 {
     private DHFGParameters? Parameters { get; set; }
 

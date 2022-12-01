@@ -11,3 +11,7 @@ public interface ICryptoParameterProvider<TParameters>
     Task<TParameters> GenerateParametersAsync();
     Task InitializeParametersAsync(TParameters parameters);
 }
+
+public interface ICryptoKeyService<TParameters> : ICryptoParameterProvider<TParameters>, ICryptoKeyProvider
+{
+}
