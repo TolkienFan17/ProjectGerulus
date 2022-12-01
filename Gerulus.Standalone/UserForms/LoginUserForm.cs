@@ -12,6 +12,12 @@ public class LoginUserForm : IUserForm
     public required IAuthenticationService Authentication { get; init; }
     public required InboxUserForm Inbox { get; init; }
 
+    public LoginUserForm(IAuthenticationService auth, InboxUserForm inbox)
+    {
+        Authentication = auth;
+        Inbox = inbox;
+    }
+
     public async Task ExecuteAsync()
     {
         var username = Prompt.Input<string>("Username");

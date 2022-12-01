@@ -8,6 +8,12 @@ public class CreateAccountUserForm : IUserForm
     public required IAuthenticationService Authentication { get; init; }
     public required InboxUserForm Inbox { get; init; }
 
+    public CreateAccountUserForm(IAuthenticationService auth, InboxUserForm inbox)
+    {
+        Authentication = auth;
+        Inbox = inbox;
+    }
+
     public async Task ExecuteAsync()
     {
         var username = Prompt.Input<string>("Choose your username");

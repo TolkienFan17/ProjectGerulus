@@ -6,6 +6,11 @@ public class EncryptionMessageService : IEncryptionMessageService
 {
     public required ICryptoKeyProvider KeyProvider { get; init; }
 
+    public EncryptionMessageService(ICryptoKeyProvider keyProvider)
+    {
+        KeyProvider = keyProvider;
+    }
+
     public async Task<EncryptedMessagePayload> EncryptAsync(string message, User author, User recipient)
     {
         var key = await KeyProvider.ComputeSharedKeyAsync(author.CreateKeyPair(), recipient.CreateKeyPair());

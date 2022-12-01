@@ -8,6 +8,12 @@ public class MainMenuForm : IUserForm
     public required LoginUserForm Login { get; init; }
     public required CreateAccountUserForm CreateAccount { get; init; }
 
+    public MainMenuForm(LoginUserForm login, CreateAccountUserForm createAccount)
+    {
+        Login = login;
+        CreateAccount = createAccount;
+    }
+
     public async Task ExecuteAsync()
     {
         var option = Prompt.Select<MainMenuSelection>("Choose an option to proceed");
