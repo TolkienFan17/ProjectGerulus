@@ -1,48 +1,56 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using Gerulus.Core.Services;
+using System.Net;
+using System.Runtime.CompilerServices;
+using Gerulus.Core;
+using Gerulus.Core.Auth;
+using Gerulus.Core.Crypto;
+using Gerulus.Standalone.UserForms;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyModel;
+using Org.BouncyCastle.Asn1.Misc;
 using Sharprompt;
 
 namespace Gerulus.Standalone;
 
+public class Application
+{
+    private IServiceProvider Services { get; }
+    public Application()
+    {
+        var collection = new ServiceCollection();
+        collection.AddDbContext<GerulusContext>();
+
+        collection.AddSingleton<IEncryptionMessageService, EncryptionMessageService>();
+        collection.AddSingleton<ICryptoKeyService<DHFGParameters>, DHFGKeyProvider>();
+        collection.AddSingleton<IAuthenticationService, AuthenticationService>();
+
+        var forms = new List<Type>()
+        {
+            typeof(MainMenuForm),
+            typeof(CreateAccountUserForm), typeof(LoginUserForm),
+            typeof(InboxUserForm)
+        };
+
+        foreach (var form in forms)
+        {
+            collection.AddSingleton(form, form);
+        }
+
+        Services = collection.BuildServiceProvider();
+    }
+
+    public Task RunAsync()
+    {
+        return Services.GetRequiredService<MainMenuForm>().ExecuteAsync();
+    }
+}
+
 public class Program
 {
-    private static IAuthenticationService Authentication = new AuthenticationService();
-
     public static async Task Main()
     {
-        var selection = Prompt.Select<LogInMenuSelection>("Welcome! Choose an option to proceed");
-
-        switch (selection)
-        {
-            case LogInMenuSelection.CreateNew:
-                var username = Prompt.Input<string>("Choose your username");
-                var password = Prompt.Password("Enter your password", "");
-
-                await Authentication.CreateAccountAsync(username, password);
-                Console.WriteLine("Account created!");
-                break;
-            case LogInMenuSelection.Login: await LoginAsync(); break;
-            default: Console.WriteLine("Invalid selection"); break;
-        };
-    }
-
-    public static async Task LoginAsync()
-    {
-        var username = Prompt.Input<string>("Username");
-        var password = Prompt.Password("Password", passwordChar: "");
-
-        if (await Authentication.AuthenticateAsync(username, password))
-            Console.WriteLine("Successfully authenticated!");
-        else
-            Console.WriteLine("Access denied");
+        var app = new Application();
+        await app.RunAsync();
     }
 }
 
-public enum LogInMenuSelection
-{
-    [Display(Name = "Create a new account")]
-    CreateNew,
-
-    [Display(Name = "Log in")]
-    Login
-}
