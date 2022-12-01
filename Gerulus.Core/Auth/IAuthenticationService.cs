@@ -1,7 +1,7 @@
-namespace Gerulus.Core.Services;
+namespace Gerulus.Core.Auth;
 
 public interface IAuthenticationService
 {
-    Task CreateAccountAsync(string username, string password);
+    Task<User> CreateAccountAsync(string username, string password);
     Task<bool> AuthenticateAsync(string username, string password);
 }

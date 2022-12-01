@@ -4,12 +4,12 @@ using Gerulus.Core;
 using Konscious.Security.Cryptography;
 using Microsoft.Data.Sqlite;
 
-namespace Gerulus.Core.Services;
+namespace Gerulus.Core.Auth;
 
 public class AuthenticationService : IAuthenticationService
 {
 
-    public async Task CreateAccountAsync(string username, string password)
+    public async Task<User> CreateAccountAsync(string username, string password)
     {
         var salt = RandomNumberGenerator.GetBytes(32);
         var hash = await ComputeHashAsync(Encoding.UTF8.GetBytes(password), salt);
@@ -23,6 +23,8 @@ public class AuthenticationService : IAuthenticationService
         using var context = new GerulusContext();
         context.Users.Add(user);
         await context.SaveChangesAsync();
+
+        return user;
     }
 
     public async Task<bool> AuthenticateAsync(string username, string password)
