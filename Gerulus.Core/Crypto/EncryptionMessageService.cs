@@ -31,6 +31,10 @@ public class EncryptionMessageService : IEncryptionMessageService
         }
     }
 
+
+    public Task<string> DecryptAsync(Message message)
+        => DecryptAsync(message.GetPayload(), message.Author, message.Recipient);
+
     public async Task<string> DecryptAsync(EncryptedMessagePayload payload, User author, User recipient)
     {
         var key = await KeyProvider.ComputeSharedKeyAsync(author.CreateKeyPair(), recipient.CreateKeyPair());
