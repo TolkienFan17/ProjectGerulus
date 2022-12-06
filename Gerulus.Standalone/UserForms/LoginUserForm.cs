@@ -1,5 +1,4 @@
 using Gerulus.Core.Auth;
-using Microsoft.EntityFrameworkCore.Infrastructure;
 using Sharprompt;
 
 namespace Gerulus.Standalone.UserForms;
