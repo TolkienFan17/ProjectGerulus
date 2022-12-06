@@ -24,6 +24,8 @@ public class Application : IDisposable, IAsyncDisposable
         builder.RegisterType<AuthenticationService>()
                .As<IAuthenticationService>();
 
+        builder.RegisterType<LocalUserState>().AsSelf();
+
         builder.RegisterAssemblyTypes(typeof(IUserForm).Assembly)
                .Where(type => typeof(IUserForm).IsAssignableFrom(type))
                .AsSelf();
