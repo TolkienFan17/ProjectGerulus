@@ -1,4 +1,5 @@
 using Autofac;
+using Gerulus.Core;
 using Gerulus.Core.Auth;
 using Gerulus.Core.Crypto;
 using Gerulus.Standalone.UserForms;
@@ -31,13 +32,18 @@ public class Application : IDisposable, IAsyncDisposable
         ServicesScope = Container.BeginLifetimeScope();
     }
 
-    public Task RunAsync()
+    public async Task RunAsync()
     {
         if (ServicesScope is null)
             throw new InvalidOperationException("Application has already been disposed");
 
+        using (var context = new GerulusContext())
+        {
+            await context.Database.EnsureCreatedAsync();
+        }
+
         var form = ServicesScope.Resolve<MainMenuForm>();
-        return form.ExecuteAsync();
+        await form.ExecuteAsync();
     }
 
     public void Dispose()
