@@ -10,11 +10,13 @@ public class LoginUserForm : IUserForm
 
     public required IAuthenticationService Authentication { get; init; }
     public required InboxUserForm Inbox { get; init; }
+    public required LocalUserState UserState { get; init; }
 
-    public LoginUserForm(IAuthenticationService auth, InboxUserForm inbox)
+    public LoginUserForm(IAuthenticationService auth, InboxUserForm inbox, LocalUserState state)
     {
         Authentication = auth;
         Inbox = inbox;
+        UserState = state;
     }
 
     public async Task ExecuteAsync()
