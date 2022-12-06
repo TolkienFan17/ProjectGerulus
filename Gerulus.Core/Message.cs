@@ -10,6 +10,7 @@ public class Message
 
     public required User Author { get; init; }
     public required User Recipient { get; init; }
+    public required string Title { get; init; }
     public required byte[] Contents { get; init; }
     public required byte[] IV { get; init; }
     public DateTimeOffset SentTime { get; }
