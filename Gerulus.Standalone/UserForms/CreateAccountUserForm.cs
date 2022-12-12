@@ -21,7 +21,7 @@ public class CreateAccountUserForm : IUserForm
         var username = Prompt.Input<string>("Choose your username");
         var password = Prompt.Password("Enter your password", "");
 
-        await Authentication.CreateAccountAsync(username, password);
+        UserState.CurrentUser = await Authentication.CreateAccountAsync(username, password);
         await Inbox.ExecuteAsync();
     }
 }

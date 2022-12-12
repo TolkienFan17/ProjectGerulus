@@ -24,8 +24,10 @@ public class LoginUserForm : IUserForm
         var username = Prompt.Input<string>("Username");
         var password = Prompt.Password("Password", passwordChar: "");
 
-        if (await Authentication.AuthenticateAsync(username, password))
+        var auth = await Authentication.AuthenticateAsync(username, password);
+        if (auth.IsSuccessful)
         {
+            UserState.CurrentUser = auth.User;
             await Inbox.ExecuteAsync();
         }
         else if (LoginAttempts >= MaxLoginAttempts)
