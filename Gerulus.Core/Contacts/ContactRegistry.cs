@@ -22,7 +22,7 @@ public class ContactRegistry : IContactRegistry
 
         contact.State = ContactState.Completed;
 
-        var key = await KeyProvider.ComputeSharedKeyAsync(primary.CreateKeyPair(), secondary.CreateKeyPair());
+        var key = await KeyProvider.ComputeSharedKeyAsync(primary.GetKeyPair(), secondary.GetKeyPair());
         contact.SharedSecret = key;
 
         await context.SaveChangesAsync();
