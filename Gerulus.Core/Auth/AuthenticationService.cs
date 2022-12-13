@@ -45,7 +45,7 @@ public class AuthenticationService : IAuthenticationService
         await passwordReader.ReadAsync();
         var user = new User()
         {
-            Id = (int)passwordReader["Id"],
+            Id = (int)(long)passwordReader["Id"],
             Username = (string)passwordReader["Username"],
             Password = (byte[])passwordReader["Password"],
             Salt = (byte[])passwordReader["Salt"],
