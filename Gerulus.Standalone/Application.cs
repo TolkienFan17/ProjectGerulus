@@ -16,7 +16,8 @@ public class Application : IDisposable, IAsyncDisposable
         var builder = new ContainerBuilder();
         builder.RegisterType<DHFGKeyProvider>()
                .As<ICryptoKeyProvider>()
-               .As<ICryptoKeyService<DHFGParameters>>();
+               .As<ICryptoKeyService<DHFGParameters>>()
+               .SingleInstance();
 
         builder.RegisterType<EncryptionMessageService>()
                .As<IEncryptionMessageService>();
@@ -24,7 +25,9 @@ public class Application : IDisposable, IAsyncDisposable
         builder.RegisterType<AuthenticationService>()
                .As<IAuthenticationService>();
 
-        builder.RegisterType<LocalUserState>().AsSelf();
+        builder.RegisterType<LocalUserState>()
+               .AsSelf()
+               .SingleInstance();
 
         builder.RegisterAssemblyTypes(typeof(IUserForm).Assembly)
                .Where(type => typeof(IUserForm).IsAssignableFrom(type))
