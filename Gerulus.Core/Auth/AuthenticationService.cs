@@ -33,7 +33,7 @@ public class AuthenticationService : IAuthenticationService
         await conn.OpenAsync();
 
         using var command = new SqliteCommand($"SELECT * FROM USERS WHERE USERNAME = '{username}';", conn);
-        /*using var command = new SqliteCommand("SELECT PASSWORD, SALT FROM USERS WHERE USERNAME = @user;", conn);
+        /*using var command = new SqliteCommand("SELECT * FROM USERS WHERE USERNAME = @user;", conn);
 
         command.Parameters.AddWithValue("user", username);
         await command.PrepareAsync();*/
