@@ -8,7 +8,7 @@ public struct AttackResult
 
     public required bool IsSuccessful { get; init; }
 
-    public static AttackResult FromEavesdrop(User attacker, Contact contact) => new()
+    public static AttackResult FromEavesdropAttack(User attacker, Contact contact) => new()
     {
         Attacker = attacker,
         Contact = contact,
@@ -16,7 +16,7 @@ public struct AttackResult
         IsSuccessful = true
     };
 
-    public static AttackResult FromIntercept(User attacker, Contact contact) => new()
+    public static AttackResult FromInterceptionAttack(User attacker, Contact contact) => new()
     {
         Attacker = attacker,
         Contact = contact,
