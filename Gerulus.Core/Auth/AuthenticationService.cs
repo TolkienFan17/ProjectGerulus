@@ -3,6 +3,7 @@ using System.Text;
 using Gerulus.Core;
 using Konscious.Security.Cryptography;
 using Microsoft.Data.Sqlite;
+using Microsoft.EntityFrameworkCore;
 
 namespace Gerulus.Core.Auth;
 
@@ -29,29 +30,12 @@ public class AuthenticationService : IAuthenticationService
 
     public async Task<AuthenticationResult> AuthenticateAsync(string username, string password)
     {
-        using var conn = new SqliteConnection("Data Source=Gerulus.db");
-        await conn.OpenAsync();
-
-        using var command = new SqliteCommand($"SELECT * FROM USERS WHERE USERNAME = '{username}';", conn);
-        /*using var command = new SqliteCommand("SELECT * FROM USERS WHERE USERNAME = @user;", conn);
-
-        command.Parameters.AddWithValue("user", username);
-        await command.PrepareAsync();*/
-
-        using var passwordReader = await command.ExecuteReaderAsync();
-        if (!passwordReader.HasRows)
-            return AuthenticationResult.FromFailure();
-
-        await passwordReader.ReadAsync();
-        var user = new User()
+        using var context = new GerulusContext();
+        var user = await context.Users.SingleOrDefaultAsync(u => u.Username.Equals(username));
+        if (user is null)
         {
-            Id = (int)(long)passwordReader["Id"],
-            Username = (string)passwordReader["Username"],
-            Password = (byte[])passwordReader["Password"],
-            Salt = (byte[])passwordReader["Salt"],
-            PublicKey = passwordReader["PublicKey"] as byte[],
-            PrivateKey = passwordReader["PrivateKey"] as byte[]
-        };
+            return AuthenticationResult.FromFailure();
+        }
 
         byte[] hash = await ComputeHashAsync(Encoding.UTF8.GetBytes(password), user.Salt);
         if (hash.SequenceEqual(user.Password))
