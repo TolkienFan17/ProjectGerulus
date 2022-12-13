@@ -49,8 +49,8 @@ public class AuthenticationService : IAuthenticationService
             Username = (string)passwordReader["Username"],
             Password = (byte[])passwordReader["Password"],
             Salt = (byte[])passwordReader["Salt"],
-            PublicKey = (byte[])passwordReader["PublicKey"],
-            PrivateKey = (byte[])passwordReader["PrivateKey"]
+            PublicKey = passwordReader["PublicKey"] as byte[],
+            PrivateKey = passwordReader["PrivateKey"] as byte[]
         };
 
         byte[] hash = await ComputeHashAsync(Encoding.UTF8.GetBytes(password), user.Salt);
