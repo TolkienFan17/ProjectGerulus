@@ -6,7 +6,7 @@ public interface IContactRegistry
     Task<Contact> CompleteContactAsync(User primary, User secondary);
     Task<Contact> CreateOrCompleteContactAsync(User primary, User secondary);
 
-    Task<Contact> AttackAsync(Contact contact, User attacker, ContactAttackType desiredAttack);
+    Task<AttackResult> AttackContactAsync(Contact contact, User attacker, ContactAttackType desiredAttack);
 
     Task<bool> DoesContactExistAsync(User primary, User secondary);
 }
