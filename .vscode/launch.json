@@ -12,7 +12,7 @@
             "program": "${workspaceFolder}/Gerulus.Standalone/bin/Debug/net7.0/Gerulus.Standalone.dll",
             "args": [],
             "cwd": "${workspaceFolder}/Gerulus.Standalone",
-            "console": "internalConsole",
+            "externalConsole": true,
             "stopAtEntry": false
         },
         {
