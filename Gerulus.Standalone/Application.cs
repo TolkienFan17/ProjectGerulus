@@ -2,6 +2,7 @@ using Autofac;
 using Gerulus.Core;
 using Gerulus.Core.Auth;
 using Gerulus.Core.Crypto;
+using Gerulus.Core.Database;
 using Gerulus.Standalone.UserForms;
 
 namespace Gerulus.Standalone;
@@ -33,6 +34,12 @@ public class Application : IDisposable, IAsyncDisposable
                .Where(type => typeof(IUserForm).IsAssignableFrom(type))
                .AsSelf();
 
+        builder.RegisterType<DefaultDatabaseOptionsProvider>()
+               .As<IDatabaseOptionsProvider>();
+
+        builder.RegisterType<GerulusContext>()
+               .AsSelf();
+
         Container = builder.Build();
         ServicesScope = Container.BeginLifetimeScope();
     }
@@ -42,8 +49,10 @@ public class Application : IDisposable, IAsyncDisposable
         if (ServicesScope is null)
             throw new InvalidOperationException("Application has already been disposed");
 
-        using (var context = new GerulusContext())
+
+        using (var scope = ServicesScope.BeginLifetimeScope())
         {
+            var context = scope.Resolve<GerulusContext>();
             await context.Database.EnsureCreatedAsync();
         }
 

@@ -8,11 +8,13 @@ public class Contact
     [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
     public long Id { get; init; }
 
-    public required User PrincipalUser { get; init; }
-    public required User IntendedUser { get; init; }
+    public required User ActualSender { get; init; }
+    public User? IntendedSender { get; set; } = null;
 
-    public User? RecipientUser { get; set; } = null;
-    public ContactState State { get; set; } = ContactState.Initiated;
+    public required User IntendedRecipient { get; init; }
+    public User? ActualRecipient { get; set; } = null;
+
+    public bool IsPending { get; set; } = true;
 
     public byte[]? SharedSecret { get; set; }
 }
