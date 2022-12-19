@@ -1,4 +1,5 @@
 using Gerulus.Core.Crypto;
+using Gerulus.Core.Database;
 using Microsoft.EntityFrameworkCore;
 
 namespace Gerulus.Core.Contacts;
@@ -6,6 +7,7 @@ namespace Gerulus.Core.Contacts;
 public class ContactRegistry : IContactRegistry
 {
     public required ICryptoKeyProvider KeyProvider { get; init; }
+    public required GerulusContext Context { get; init; }
 
     public Task<AttackResult> AttackContactAsync(Contact contact, User attacker, ContactAttackType desiredAttack)
     {
@@ -14,18 +16,28 @@ public class ContactRegistry : IContactRegistry
 
     public async Task<Contact> CompleteContactAsync(User primary, User secondary)
     {
-        using var context = new GerulusContext();
-        var contact = await context.Contacts.SingleOrDefaultAsync(contact => contact.PrincipalUser == primary && contact.IntendedUser == secondary);
+        var contact = await Context.Contacts.SingleOrDefaultAsync(contact => contact.ActualSender == primary && contact.IntendedRecipient == secondary);
 
         if (contact == null)
             throw new InvalidOperationException("A contact request has not been begun to be completed");
 
-        contact.State = ContactState.Completed;
+        contact.ActualRecipient = secondary;
+        contact.IsPending = false;
 
         var key = await KeyProvider.ComputeSharedKeyAsync(primary.GetKeyPair(), secondary.GetKeyPair());
         contact.SharedSecret = key;
 
-        await context.SaveChangesAsync();
+        var inverseContact = new Contact()
+        {
+            ActualSender = secondary,
+            IntendedRecipient = primary,
+            ActualRecipient = primary,
+            IsPending = false,
+            SharedSecret = key
+        };
+
+        await Context.AddAsync(inverseContact);
+        await Context.SaveChangesAsync();
         return contact;
     }
 
@@ -36,16 +48,15 @@ public class ContactRegistry : IContactRegistry
             throw new InvalidOperationException("Cannot create a new contact between two users when a contact already exists");
         }
 
-        using var context = new GerulusContext();
         var contact = new Contact()
         {
-            PrincipalUser = primary,
-            IntendedUser = secondary,
-            State = ContactState.Initiated
+            ActualSender = primary,
+            IntendedRecipient = secondary,
+            IsPending = true
         };
 
-        await context.Contacts.AddAsync(contact);
-        await context.SaveChangesAsync();
+        await Context.Contacts.AddAsync(contact);
+        await Context.SaveChangesAsync();
 
         return contact;
     }
@@ -57,23 +68,21 @@ public class ContactRegistry : IContactRegistry
             return await CompleteContactAsync(primary, secondary);
         }
 
-        using var context = new GerulusContext();
         var contact = new Contact()
         {
-            PrincipalUser = primary,
-            IntendedUser = secondary,
-            State = ContactState.Initiated
+            ActualSender = primary,
+            IntendedRecipient = secondary,
+            IsPending = true
         };
 
-        await context.Contacts.AddAsync(contact);
-        await context.SaveChangesAsync();
+        await Context.Contacts.AddAsync(contact);
+        await Context.SaveChangesAsync();
 
         return contact;
     }
 
     public Task<bool> DoesContactExistAsync(User primary, User secondary)
     {
-        using var context = new GerulusContext();
-        return context.Contacts.AnyAsync(c => c.PrincipalUser == primary && c.IntendedUser == secondary);
+        return Context.Contacts.AnyAsync(c => c.ActualSender == primary && c.IntendedRecipient == secondary);
     }
 }
