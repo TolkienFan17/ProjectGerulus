@@ -54,24 +54,24 @@ public class ContactRegistry : IContactRegistry
         }
     }
 
-    public async Task<Contact> CompleteContactAsync(User primary, User secondary)
+    public async Task<Contact> CompleteContactAsync(User sender, User recipient)
     {
-        var contact = await Context.Contacts.SingleOrDefaultAsync(contact => contact.ActualSender == primary && contact.IntendedRecipient == secondary);
+        var contact = await Context.Contacts.SingleOrDefaultAsync(contact => contact.ActualSender == sender && contact.IntendedRecipient == recipient);
 
         if (contact == null)
             throw new InvalidOperationException("A contact request has not been begun to be completed");
 
-        contact.ActualRecipient = secondary;
+        contact.ActualRecipient = recipient;
         contact.IsPending = false;
 
-        var key = await KeyProvider.ComputeSharedKeyAsync(primary.GetKeyPair(), secondary.GetKeyPair());
+        var key = await KeyProvider.ComputeSharedKeyAsync(sender.GetKeyPair(), recipient.GetKeyPair());
         contact.SharedSecret = key;
 
         var inverseContact = new Contact()
         {
-            ActualSender = secondary,
-            IntendedRecipient = primary,
-            ActualRecipient = primary,
+            ActualSender = recipient,
+            IntendedRecipient = sender,
+            ActualRecipient = sender,
             IsPending = false,
             SharedSecret = key
         };
@@ -81,17 +81,17 @@ public class ContactRegistry : IContactRegistry
         return contact;
     }
 
-    public async Task<Contact> CreateNewContactAsync(User primary, User secondary)
+    public async Task<Contact> CreateNewContactAsync(User sender, User recipient)
     {
-        if (await DoesContactExistAsync(primary, secondary))
+        if (await DoesContactExistAsync(sender, recipient))
         {
             throw new InvalidOperationException("Cannot create a new contact between two users when a contact already exists");
         }
 
         var contact = new Contact()
         {
-            ActualSender = primary,
-            IntendedRecipient = secondary,
+            ActualSender = sender,
+            IntendedRecipient = recipient,
             IsPending = true
         };
 
@@ -101,17 +101,17 @@ public class ContactRegistry : IContactRegistry
         return contact;
     }
 
-    public async Task<Contact> CreateOrCompleteContactAsync(User primary, User secondary)
+    public async Task<Contact> CreateOrCompleteContactAsync(User sender, User recipient)
     {
-        if (await DoesContactExistAsync(primary, secondary))
+        if (await DoesContactExistAsync(sender, recipient))
         {
-            return await CompleteContactAsync(primary, secondary);
+            return await CompleteContactAsync(sender, recipient);
         }
 
         var contact = new Contact()
         {
-            ActualSender = primary,
-            IntendedRecipient = secondary,
+            ActualSender = sender,
+            IntendedRecipient = recipient,
             IsPending = true
         };
 
@@ -121,8 +121,9 @@ public class ContactRegistry : IContactRegistry
         return contact;
     }
 
-    public Task<bool> DoesContactExistAsync(User primary, User secondary)
+    // TODO Should the order matter?
+    public Task<bool> DoesContactExistAsync(User sender, User recipient)
     {
-        return Context.Contacts.AnyAsync(c => c.ActualSender == primary && c.IntendedRecipient == secondary);
+        return Context.Contacts.AnyAsync(c => c.ActualSender == sender && c.IntendedRecipient == recipient);
     }
 }
