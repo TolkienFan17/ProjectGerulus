@@ -9,9 +9,49 @@ public class ContactRegistry : IContactRegistry
     public required ICryptoKeyProvider KeyProvider { get; init; }
     public required GerulusContext Context { get; init; }
 
-    public Task<AttackResult> AttackContactAsync(Contact contact, User attacker, ContactAttackType desiredAttack)
+    public async Task<AttackResult> AttackContactAsync(Contact contact, User attacker, ContactAttackType desiredAttack)
     {
-        throw new NotImplementedException();
+        if (!contact.IsPending)
+        {
+            return AttackResult.FromContactCompletion(attacker, contact, desiredAttack);
+        }
+
+        contact.ActualRecipient = attacker;
+
+        var victimKey = await KeyProvider.ComputeSharedKeyAsync(contact.ActualSender.GetKeyPair(), attacker.GetKeyPair());
+        contact.SharedSecret = victimKey;
+        contact.IsPending = false;
+
+        switch (desiredAttack)
+        {
+            case ContactAttackType.Eavesdrop:
+
+                var recipientUser = new Contact()
+                {
+                    ActualSender = attacker,
+                    IntendedSender = contact.IntendedSender,
+                    ActualRecipient = contact.IntendedRecipient,
+                    IntendedRecipient = contact.IntendedRecipient,
+
+                    IsPending = false
+                };
+
+                var recipientKey = await KeyProvider.ComputeSharedKeyAsync(attacker.GetKeyPair(), contact.IntendedRecipient.GetKeyPair());
+                recipientUser.SharedSecret = recipientKey;
+
+                await Context.Contacts.AddAsync(recipientUser);
+                await Context.SaveChangesAsync();
+
+                return AttackResult.FromEavesdropAttack(attacker, contact);
+
+            case ContactAttackType.Intercept:
+                contact.IsPending = false;
+                await Context.SaveChangesAsync();
+                return AttackResult.FromInterceptionAttack(attacker, contact);
+
+            default:
+                throw new InvalidOperationException($"Attack type {desiredAttack} is not supported");
+        }
     }
 
     public async Task<Contact> CompleteContactAsync(User primary, User secondary)
