@@ -5,8 +5,6 @@ namespace Gerulus.Core.Crypto;
 
 public class DHFGParameters
 {
-    public DHParameters Parameters { get; }
-
     public byte[] P { get; }
     public byte[] G { get; }
 
@@ -14,14 +12,16 @@ public class DHFGParameters
     {
         P = p;
         G = g;
-
-        Parameters = new DHParameters(new BigInteger(p), new BigInteger(g));
     }
 
     public DHFGParameters(DHParameters parameters)
     {
-        Parameters = parameters;
         P = parameters.P.ToByteArray();
         G = parameters.G.ToByteArray();
+    }
+
+    public DHParameters ToBouncyCastle()
+    {
+        return new DHParameters(new BigInteger(P), new BigInteger(G));
     }
 }
