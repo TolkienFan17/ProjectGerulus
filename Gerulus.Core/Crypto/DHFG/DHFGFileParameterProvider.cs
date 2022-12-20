@@ -1,3 +1,4 @@
+using Gerulus.Core.Config;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Security;
 using Org.BouncyCastle.Utilities.IO.Pem;
@@ -10,6 +11,8 @@ public sealed partial class DHFG
     {
         public bool IsInitialized { get; private set; }
         public Parameters? Parameters { get; private set; }
+
+        public required IConfigProvider Config { get; init; }
 
         public Task<Parameters> GenerateParametersAsync()
         {
@@ -25,7 +28,7 @@ public sealed partial class DHFG
         {
             if (Parameters is null) throw new InvalidOperationException("Cannot save parameters until they have been generated");
 
-            using var fileWriter = new StreamWriter("dh-parameters.key");
+            using var fileWriter = new StreamWriter(Config.Get().ParametersFileLocation);
             var pemWriter = new PemWriter(fileWriter);
 
             pemWriter.WriteObject(new PemObject("P Value", Parameters.P));
@@ -35,7 +38,7 @@ public sealed partial class DHFG
 
         public Task<bool> LoadParametersAsync()
         {
-            using var fileReader = new StreamReader("dh-parameters.key");
+            using var fileReader = new StreamReader(Config.Get().ParametersFileLocation);
             var pemReader = new PemReader(fileReader);
 
             var pValue = pemReader.ReadPemObject();
