@@ -5,23 +5,9 @@ using Org.BouncyCastle.Security;
 
 namespace Gerulus.Core.Crypto;
 
-public class DHFGKeyProvider : ICryptoKeyService<DHFGParameters>
+public class DHFGKeyProvider : ICryptoKeyProvider
 {
-    private DHFGParameters? Parameters { get; set; }
-
-    public Task<DHFGParameters> GenerateParametersAsync()
-    {
-        var generator = new DHParametersGenerator();
-        generator.Init(4096, 100, new SecureRandom());
-        Parameters = new DHFGParameters(generator.GenerateParameters());
-        return Task.FromResult((DHFGParameters)Parameters);
-    }
-
-    public Task InitializeParametersAsync(DHFGParameters parameters)
-    {
-        Parameters = parameters;
-        return Task.CompletedTask;
-    }
+    public required ICryptoParameterProvider<DHFGParameters> ParameterProvider { get; init; }
 
     public Task<CryptographicKeyPair> GenerateKeyPairAsync()
     {
