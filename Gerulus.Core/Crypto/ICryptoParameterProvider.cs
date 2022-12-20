@@ -6,5 +6,6 @@ public interface ICryptoParameterProvider<TParameters>
     TParameters? Parameters { get; }
 
     Task<TParameters> GenerateParametersAsync();
-    Task InitializeParametersAsync(TParameters parameters);
+    Task SaveParametersAsync();
+    Task<bool> LoadParametersAsync();
 }
