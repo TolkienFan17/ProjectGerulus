@@ -15,9 +15,11 @@ public class Application : IDisposable, IAsyncDisposable
     public Application()
     {
         var builder = new ContainerBuilder();
-        builder.RegisterType<DHFGKeyProvider>()
-               .As<ICryptoKeyProvider>()
-               .As<ICryptoKeyService<DHFGParameters>>()
+        builder.RegisterType<DHFG.KeyProvider>()
+               .As<ICryptoKeyProvider>();
+
+        builder.RegisterType<DHFG.FileParameterProvider>()
+               .As<ICryptoParameterProvider<DHFG.Parameters>>()
                .SingleInstance();
 
         builder.RegisterType<EncryptionMessageService>()
