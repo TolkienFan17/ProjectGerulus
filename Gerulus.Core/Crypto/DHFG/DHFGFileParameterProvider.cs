@@ -17,7 +17,7 @@ public sealed partial class DHFG
         public Task<Parameters> GenerateParametersAsync()
         {
             var generator = new DHParametersGenerator();
-            generator.Init(512, 100, new SecureRandom());
+            generator.Init(Config.Get().ParameterSize, 100, new SecureRandom());
 
             Parameters = new Parameters(generator.GenerateParameters());
             IsInitialized = true;

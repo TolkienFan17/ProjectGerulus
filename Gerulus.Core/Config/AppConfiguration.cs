@@ -9,4 +9,7 @@ public class AppConfiguration
 
     [JsonPropertyName("encryptionParametersFileLocation")]
     public string ParametersFileLocation { get; set; } = "encryption-parameters.pem";
+
+    [JsonPropertyName("encryptionParameterSize")]
+    public int ParameterSize { get; set; } = 4096;
 }
