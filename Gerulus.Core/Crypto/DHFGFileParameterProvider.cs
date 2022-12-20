@@ -5,7 +5,9 @@ namespace Gerulus.Core.Crypto;
 
 public class DHFGFileParameterProvider : ICryptoParameterProvider<DHFGParameters>
 {
+    public bool IsInitialized { get; private set; }
     public DHFGParameters? Parameters { get; private set; }
+
 
     public Task<DHFGParameters> GenerateParametersAsync()
     {

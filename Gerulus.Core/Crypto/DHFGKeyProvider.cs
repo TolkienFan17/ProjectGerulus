@@ -11,10 +11,12 @@ public class DHFGKeyProvider : ICryptoKeyProvider
 
     public Task<CryptographicKeyPair> GenerateKeyPairAsync()
     {
-        if (Parameters is null) throw new InvalidOperationException();
+        DHFGParameters parameters = ParameterProvider.IsInitialized ?
+                        ParameterProvider.Parameters! :
+                        throw new InvalidOperationException();
 
         var generator = GeneratorUtilities.GetKeyPairGenerator("DH");
-        generator.Init(new DHKeyGenerationParameters(new SecureRandom(), Parameters.Value.Parameters));
+        generator.Init(new DHKeyGenerationParameters(new SecureRandom(), parameters.ToBouncyCastle()));
         var pair = generator.GenerateKeyPair();
         var publicPart = ((DHPublicKeyParameters)pair.Public).Y.ToByteArray();
         var privatePart = ((DHPrivateKeyParameters)pair.Private).X.ToByteArray();
@@ -23,11 +25,13 @@ public class DHFGKeyProvider : ICryptoKeyProvider
 
     public Task<byte[]> ComputeSharedKeyAsync(CryptographicKeyPair initiator, CryptographicKeyPair otherKey)
     {
-        if (Parameters is null) throw new InvalidOperationException();
+        DHFGParameters parameters = ParameterProvider.IsInitialized ?
+                        ParameterProvider.Parameters! :
+                        throw new InvalidOperationException();
 
         var agreement = AgreementUtilities.GetBasicAgreement("DH");
-        agreement.Init(new DHPrivateKeyParameters(new BigInteger(otherKey.PrivateKey), Parameters.Value.Parameters));
-        var publicKey = new DHPublicKeyParameters(new BigInteger(initiator.PublicKey), Parameters.Value.Parameters);
+        agreement.Init(new DHPrivateKeyParameters(new BigInteger(otherKey.PrivateKey), parameters.ToBouncyCastle()));
+        var publicKey = new DHPublicKeyParameters(new BigInteger(initiator.PublicKey), parameters.ToBouncyCastle());
         var secret = agreement.CalculateAgreement(publicKey);
         return Task.FromResult(secret.ToByteArray());
     }
