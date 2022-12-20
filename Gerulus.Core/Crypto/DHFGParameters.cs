@@ -3,7 +3,7 @@ using Org.BouncyCastle.Math;
 
 namespace Gerulus.Core.Crypto;
 
-public struct DHFGParameters
+public class DHFGParameters
 {
     public DHParameters Parameters { get; }
 
