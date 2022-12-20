@@ -3,9 +3,9 @@ using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 using Org.BouncyCastle.Security;
 
-namespace Gerulus.Core.Crypto;
+namespace Gerulus.Core.Crypto.DHFG;
 
-public class DHFGKeyProvider : ICryptoKeyProvider
+public class KeyProvider : ICryptoKeyProvider
 {
     public required ICryptoParameterProvider<DHFGParameters> ParameterProvider { get; init; }
 

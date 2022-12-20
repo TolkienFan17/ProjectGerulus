@@ -1,13 +1,13 @@
+using Gerulus.Core.Crypto;
 using Org.BouncyCastle.Crypto.Generators;
 using Org.BouncyCastle.Security;
 
-namespace Gerulus.Core.Crypto;
+namespace Gerulus.Core.Crypto.DHFG;
 
-public class DHFGFileParameterProvider : ICryptoParameterProvider<DHFGParameters>
+public class FileParameterProvider : ICryptoParameterProvider<DHFGParameters>
 {
     public bool IsInitialized { get; private set; }
     public DHFGParameters? Parameters { get; private set; }
-
 
     public Task<DHFGParameters> GenerateParametersAsync()
     {

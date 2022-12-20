@@ -1,20 +1,20 @@
 using Org.BouncyCastle.Crypto.Parameters;
 using Org.BouncyCastle.Math;
 
-namespace Gerulus.Core.Crypto;
+namespace Gerulus.Core.Crypto.DHFG;
 
-public class DHFGParameters
+public class Parameters
 {
     public byte[] P { get; }
     public byte[] G { get; }
 
-    public DHFGParameters(byte[] p, byte[] g)
+    public Parameters(byte[] p, byte[] g)
     {
         P = p;
         G = g;
     }
 
-    public DHFGParameters(DHParameters parameters)
+    public Parameters(DHParameters parameters)
     {
         P = parameters.P.ToByteArray();
         G = parameters.G.ToByteArray();
