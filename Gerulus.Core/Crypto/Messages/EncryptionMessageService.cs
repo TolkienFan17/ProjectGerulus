@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace Gerulus.Core.Crypto;
+namespace Gerulus.Core.Crypto.Messages;
 
 public class EncryptionMessageService : IEncryptionMessageService
 {

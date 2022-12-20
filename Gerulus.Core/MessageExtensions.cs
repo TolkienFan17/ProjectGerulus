@@ -1,4 +1,4 @@
-using Gerulus.Core.Crypto;
+using Gerulus.Core.Crypto.Messages;
 
 namespace Gerulus.Core;
 

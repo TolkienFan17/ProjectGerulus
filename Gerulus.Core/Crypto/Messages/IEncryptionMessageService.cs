@@ -1,4 +1,4 @@
-namespace Gerulus.Core.Crypto;
+namespace Gerulus.Core.Crypto.Messages;
 
 public interface IEncryptionMessageService
 {

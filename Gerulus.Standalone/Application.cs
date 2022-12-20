@@ -1,7 +1,7 @@
 using Autofac;
-using Gerulus.Core;
 using Gerulus.Core.Auth;
 using Gerulus.Core.Crypto;
+using Gerulus.Core.Crypto.Messages;
 using Gerulus.Core.Database;
 using Gerulus.Standalone.UserForms;
 
