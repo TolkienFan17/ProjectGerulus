@@ -1,7 +1,7 @@
 using Autofac;
-using Gerulus.Core;
 using Gerulus.Core.Auth;
 using Gerulus.Core.Crypto;
+using Gerulus.Core.Crypto.Messages;
 using Gerulus.Core.Database;
 using Gerulus.Standalone.UserForms;
 
@@ -15,9 +15,11 @@ public class Application : IDisposable, IAsyncDisposable
     public Application()
     {
         var builder = new ContainerBuilder();
-        builder.RegisterType<DHFGKeyProvider>()
-               .As<ICryptoKeyProvider>()
-               .As<ICryptoKeyService<DHFGParameters>>()
+        builder.RegisterType<DHFG.KeyProvider>()
+               .As<ICryptoKeyProvider>();
+
+        builder.RegisterType<DHFG.FileParameterProvider>()
+               .As<ICryptoParameterProvider<DHFG.Parameters>>()
                .SingleInstance();
 
         builder.RegisterType<EncryptionMessageService>()
