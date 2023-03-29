@@ -13,7 +13,7 @@ public class EncryptionMessageService : IEncryptionMessageService
 
     public async Task<EncryptedMessagePayload> EncryptAsync(string message, User author, User recipient)
     {
-        var key = await KeyProvider.ComputeSharedKeyAsync(author.GetKeyPair(), recipient.GetKeyPair());
+        var key = await KeyProvider.ComputeSharedKeyAsync(author.KeyPair, recipient.KeyPair);
 
         using var aes = Aes.Create();
         aes.GenerateIV();
@@ -42,7 +42,7 @@ public class EncryptionMessageService : IEncryptionMessageService
 
     public async Task<string> DecryptAsync(EncryptedMessagePayload payload, User author, User recipient)
     {
-        var key = await KeyProvider.ComputeSharedKeyAsync(author.GetKeyPair(), recipient.GetKeyPair());
+        var key = await KeyProvider.ComputeSharedKeyAsync(author.KeyPair, recipient.KeyPair);
 
         using var aes = Aes.Create();
         aes.IV = payload.IV;
