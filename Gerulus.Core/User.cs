@@ -6,8 +6,8 @@ namespace Gerulus.Core;
 
 public class User
 {
-    [Key, DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-    public int Id { get; init; }
+    [Key]
+    public UserId Id { get; init; }
 
     public required string Username { get; set; }
     public required byte[] Password { get; set; }
