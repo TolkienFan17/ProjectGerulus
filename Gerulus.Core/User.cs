@@ -4,16 +4,17 @@ using Gerulus.Core.Crypto;
 
 namespace Gerulus.Core;
 
-public class User
+public class User : AggregateRoot<UserId>
 {
-    [Key]
-    public UserId Id { get; init; }
-
     public required string Username { get; set; }
     public required byte[] Password { get; set; }
     public required byte[] Salt { get; set; }
 
     public CryptographicKeyPair KeyPair { get; set; }
+
+    public User(UserId? id = null) : base(id ?? new UserId())
+    {
+    }
 
     public async Task<CryptographicKeyPair> GenerateKeyPairAsync(ICryptoKeyProvider keyProvider)
     {
