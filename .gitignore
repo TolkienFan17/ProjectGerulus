@@ -411,6 +411,7 @@ Thumbs.db
 Desktop.ini
 .DS_Store
 
+*.sqlite
 *.db
 *.db-shm
 *.db-wal
