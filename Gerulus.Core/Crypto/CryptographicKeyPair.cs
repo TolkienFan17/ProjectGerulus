@@ -2,7 +2,7 @@ using Org.BouncyCastle.Math;
 
 namespace Gerulus.Core.Crypto;
 
-public struct CryptographicKeyPair
+public readonly struct CryptographicKeyPair
 {
     public byte[] PublicKey { get; }
     public byte[] PrivateKey { get; }
