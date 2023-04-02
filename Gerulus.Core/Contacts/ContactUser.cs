@@ -3,23 +3,21 @@ using Gerulus.Core.Contacts.Events;
 
 namespace Gerulus.Core.Contacts;
 
-public class ContactUser : AggregateRoot<CompositeId<UserId, UserId>>
+public class ContactUser : AggregateRoot<ContactUserId>
 {
     private HashSet<Contact> ContactsList { get; } = new();
     public ImmutableList<Contact> Contacts => ContactsList.ToImmutableList();
 
-    public UserId CoreUser { get; }
-    public UserId Identity { get; }
+    public UserId CoreUser => Id.Core;
+    public UserId Identity => Id.Identity;
 
     public ContactUser(UserId user) : this(user, user)
     {
     }
 
     public ContactUser(UserId actualUser, UserId identityUser) 
-        : base(CompositeId.From(actualUser, identityUser))
+        : base(new ContactUserId(actualUser, identityUser))
     {
-        CoreUser = actualUser;
-        Identity = identityUser;
     }
 
     public ContactUser? GetContactWith(ContactUser user)
